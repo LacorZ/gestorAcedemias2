@@ -1,0 +1,28 @@
+{
+  "gestorAcedemias2App": {
+    "tutor": {
+      "home": {
+        "title": "Tutors",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Tutor",
+        "createOrEditLabel": "Crear o editar Tutor",
+        "notFound": "Ningún Tutors encontrado"
+      },
+      "created": "Un nuevo Tutor ha sido creado con el identificador {{ param }}",
+      "updated": "Un Tutor ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Tutor ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Tutor {{ id }}?"
+      },
+      "detail": {
+        "title": "Tutor"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "email": "Email",
+      "telefono": "Telefono",
+      "observaciones": "Observaciones",
+      "cursos": "Cursos"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "gestorAcedemias2App": {
+    "padre": {
+      "home": {
+        "title": "Padres",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Padre",
+        "createOrEditLabel": "Create or edit a Padre",
+        "notFound": "No Padres found"
+      },
+      "created": "A new Padre is created with identifier {{ param }}",
+      "updated": "A Padre is updated with identifier {{ param }}",
+      "deleted": "A Padre is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Padre {{ id }}?"
+      },
+      "detail": {
+        "title": "Padre"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "email": "Email",
+      "telefono": "Telefono",
+      "observaciones": "Observaciones",
+      "estudiantes": "Estudiantes"
+    }
+  }
+}

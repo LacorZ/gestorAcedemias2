@@ -1,0 +1,28 @@
+{
+  "gestorAcedemias2App": {
+    "pago": {
+      "home": {
+        "title": "Pagos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Pago",
+        "createOrEditLabel": "Create or edit a Pago",
+        "notFound": "No Pagos found"
+      },
+      "created": "A new Pago is created with identifier {{ param }}",
+      "updated": "A Pago is updated with identifier {{ param }}",
+      "deleted": "A Pago is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Pago {{ id }}?"
+      },
+      "detail": {
+        "title": "Pago"
+      },
+      "id": "ID",
+      "cantidad": "Cantidad",
+      "fechaPago": "Fecha Pago",
+      "metodoPago": "Metodo Pago",
+      "observaciones": "Observaciones",
+      "factura": "Factura"
+    }
+  }
+}

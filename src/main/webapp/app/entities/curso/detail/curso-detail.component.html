@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="curso">
+      <h2 data-cy="cursoDetailsHeading"><span jhiTranslate="gestorAcedemias2App.curso.detail.title">Curso</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ curso.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.nombre">Nombre</span></dt>
+        <dd>
+          <span>{{ curso.nombre }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.descripcion">Descripcion</span></dt>
+        <dd>
+          <span>{{ curso.descripcion }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.price">Price</span></dt>
+        <dd>
+          <span>{{ curso.price }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.fechaInicio">Fecha Inicio</span></dt>
+        <dd>
+          <span>{{ curso.fechaInicio | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.fechaFin">Fecha Fin</span></dt>
+        <dd>
+          <span>{{ curso.fechaFin | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.observaciones">Observaciones</span></dt>
+        <dd>
+          <span>{{ curso.observaciones }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.asistencias">Asistencias</span></dt>
+        <dd>
+          <div *ngIf="curso.asistencias">
+            <a [routerLink]="['/asistencia', curso.asistencias.id, 'view']">{{ curso.asistencias.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.curso.asistencia">Asistencia</span></dt>
+        <dd>
+          <div *ngIf="curso.asistencia">
+            <a [routerLink]="['/asistencia', curso.asistencia.id, 'view']">{{ curso.asistencia.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/curso', curso.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Padre.
+    -->
+    <changeSet id="20221212212149-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="padre_id"
+                                 baseTableName="rel_padre__estudiantes"
+                                 constraintName="fk_rel_padre__estudiantes__padre_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="padre"/>
+
+        <addForeignKeyConstraint baseColumnNames="estudiantes_id"
+                                 baseTableName="rel_padre__estudiantes"
+                                 constraintName="fk_rel_padre__estudiantes__estudiantes_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="estudiante"/>
+    </changeSet>
+</databaseChangeLog>

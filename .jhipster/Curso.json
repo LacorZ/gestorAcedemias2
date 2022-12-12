@@ -1,0 +1,68 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212212146",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "curso",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "price",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaInicio",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaFin",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Curso",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "asistencia",
+      "relationshipName": "asistencias",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "asistencia",
+      "otherEntityRelationshipName": "curso",
+      "relationshipName": "asistencia",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "tutor",
+      "otherEntityRelationshipName": "cursos",
+      "ownerSide": false,
+      "relationshipName": "tutors",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "estudiante",
+      "otherEntityRelationshipName": "cursos",
+      "ownerSide": false,
+      "relationshipName": "estudiantes",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

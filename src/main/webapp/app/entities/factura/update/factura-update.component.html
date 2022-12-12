@@ -1,0 +1,116 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-factura-heading" data-cy="FacturaCreateUpdateHeading" jhiTranslate="gestorAcedemias2App.factura.home.createOrEditLabel">
+        Crear o editar Factura
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="gestorAcedemias2App.factura.facturado" for="field_facturado">Facturado</label>
+          <input type="number" class="form-control" name="facturado" id="field_facturado" data-cy="facturado" formControlName="facturado" />
+          <div *ngIf="editForm.get('facturado')!.invalid && (editForm.get('facturado')!.dirty || editForm.get('facturado')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('facturado')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('facturado')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              Este campo debe ser un número.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="gestorAcedemias2App.factura.fechaFactura" for="field_fechaFactura">Fecha Factura</label>
+          <div class="d-flex">
+            <input
+              id="field_fechaFactura"
+              data-cy="fechaFactura"
+              type="datetime-local"
+              class="form-control"
+              name="fechaFactura"
+              formControlName="fechaFactura"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div
+            *ngIf="editForm.get('fechaFactura')!.invalid && (editForm.get('fechaFactura')!.dirty || editForm.get('fechaFactura')!.touched)"
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('fechaFactura')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Este campo es obligatorio.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('fechaFactura')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Este campo debe ser una fecha y hora.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="gestorAcedemias2App.factura.observaciones" for="field_observaciones">Observaciones</label>
+          <input
+            type="text"
+            class="form-control"
+            name="observaciones"
+            id="field_observaciones"
+            data-cy="observaciones"
+            formControlName="observaciones"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="gestorAcedemias2App.factura.pagos" for="field_pagos">Pagos</label>
+          <select class="form-control" id="field_pagos" data-cy="pagos" name="pagos" formControlName="pagos" [compareWith]="comparePago">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="pagoOption" *ngFor="let pagoOption of pagosSharedCollection">{{ pagoOption.id }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="gestorAcedemias2App.factura.pago" for="field_pago">Pago</label>
+          <select class="form-control" id="field_pago" data-cy="pago" name="pago" formControlName="pago" [compareWith]="comparePago">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="pagoOption" *ngFor="let pagoOption of pagosSharedCollection">{{ pagoOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

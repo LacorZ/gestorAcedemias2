@@ -1,0 +1,42 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212212149",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "padre",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Padre",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "estudiante",
+      "otherEntityRelationshipName": "padres",
+      "ownerSide": true,
+      "relationshipName": "estudiantes",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

@@ -1,0 +1,11 @@
+{
+  "gestorAcedemias2App": {
+    "AsistenciaEstado": {
+      "null": "",
+      "PRESENTE": "PRESENTE",
+      "AUSENTE": "AUSENTE",
+      "NO_DEFINIDO": "NO_DEFINIDO",
+      "OTRO": "OTRO"
+    }
+  }
+}

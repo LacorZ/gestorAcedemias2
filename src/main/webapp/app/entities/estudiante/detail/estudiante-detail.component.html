@@ -1,0 +1,75 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="estudiante">
+      <h2 data-cy="estudianteDetailsHeading"><span jhiTranslate="gestorAcedemias2App.estudiante.detail.title">Estudiante</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ estudiante.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.nombre">Nombre</span></dt>
+        <dd>
+          <span>{{ estudiante.nombre }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.email">Email</span></dt>
+        <dd>
+          <span>{{ estudiante.email }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.telefono">Telefono</span></dt>
+        <dd>
+          <span>{{ estudiante.telefono }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.observaciones">Observaciones</span></dt>
+        <dd>
+          <span>{{ estudiante.observaciones }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.asistencias">Asistencias</span></dt>
+        <dd>
+          <div *ngIf="estudiante.asistencias">
+            <a [routerLink]="['/asistencia', estudiante.asistencias.id, 'view']">{{ estudiante.asistencias.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.facturas">Facturas</span></dt>
+        <dd>
+          <div *ngIf="estudiante.facturas">
+            <a [routerLink]="['/factura', estudiante.facturas.id, 'view']">{{ estudiante.facturas.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.cursos">Cursos</span></dt>
+        <dd>
+          <span *ngFor="let cursos of estudiante.cursos; let last = last">
+            <a [routerLink]="['/curso', cursos.id, 'view']">{{ cursos.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.asistencia">Asistencia</span></dt>
+        <dd>
+          <div *ngIf="estudiante.asistencia">
+            <a [routerLink]="['/asistencia', estudiante.asistencia.id, 'view']">{{ estudiante.asistencia.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.estudiante.factura">Factura</span></dt>
+        <dd>
+          <div *ngIf="estudiante.factura">
+            <a [routerLink]="['/factura', estudiante.factura.id, 'view']">{{ estudiante.factura.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/estudiante', estudiante.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

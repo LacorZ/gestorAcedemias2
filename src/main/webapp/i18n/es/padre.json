@@ -1,0 +1,28 @@
+{
+  "gestorAcedemias2App": {
+    "padre": {
+      "home": {
+        "title": "Padres",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Padre",
+        "createOrEditLabel": "Crear o editar Padre",
+        "notFound": "Ningún Padres encontrado"
+      },
+      "created": "Un nuevo Padre ha sido creado con el identificador {{ param }}",
+      "updated": "Un Padre ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Padre ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Padre {{ id }}?"
+      },
+      "detail": {
+        "title": "Padre"
+      },
+      "id": "ID",
+      "nombre": "Nombre",
+      "email": "Email",
+      "telefono": "Telefono",
+      "observaciones": "Observaciones",
+      "estudiantes": "Estudiantes"
+    }
+  }
+}

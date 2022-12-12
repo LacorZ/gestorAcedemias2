@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="factura">
+      <h2 data-cy="facturaDetailsHeading"><span jhiTranslate="gestorAcedemias2App.factura.detail.title">Factura</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ factura.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.factura.facturado">Facturado</span></dt>
+        <dd>
+          <span>{{ factura.facturado }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.factura.fechaFactura">Fecha Factura</span></dt>
+        <dd>
+          <span>{{ factura.fechaFactura | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.factura.observaciones">Observaciones</span></dt>
+        <dd>
+          <span>{{ factura.observaciones }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.factura.pagos">Pagos</span></dt>
+        <dd>
+          <div *ngIf="factura.pagos">
+            <a [routerLink]="['/pago', factura.pagos.id, 'view']">{{ factura.pagos.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.factura.pago">Pago</span></dt>
+        <dd>
+          <div *ngIf="factura.pago">
+            <a [routerLink]="['/pago', factura.pago.id, 'view']">{{ factura.pago.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/factura', factura.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

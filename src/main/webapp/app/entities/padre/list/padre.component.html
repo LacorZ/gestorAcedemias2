@@ -1,0 +1,111 @@
+<div>
+  <h2 id="page-heading" data-cy="PadreHeading">
+    <span jhiTranslate="gestorAcedemias2App.padre.home.title">Padres</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="gestorAcedemias2App.padre.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-padre"
+        [routerLink]="['/padre/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="gestorAcedemias2App.padre.home.createLabel"> Crear nuevo Padre </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="padres?.length === 0">
+    <span jhiTranslate="gestorAcedemias2App.padre.home.notFound">Ningún Padres encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="padres && padres.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="nombre">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.padre.nombre">Nombre</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="email">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.padre.email">Email</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="telefono">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.padre.telefono">Telefono</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="observaciones">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.padre.observaciones">Observaciones</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="estudiantes.id">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.padre.estudiantes">Estudiantes</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let padre of padres; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/padre', padre.id, 'view']">{{ padre.id }}</a>
+          </td>
+          <td>{{ padre.nombre }}</td>
+          <td>{{ padre.email }}</td>
+          <td>{{ padre.telefono }}</td>
+          <td>{{ padre.observaciones }}</td>
+          <td>
+            <span *ngFor="let estudiantes of padre.estudiantes; let last = last">
+              <a class="form-control-static" [routerLink]="['/estudiante', estudiantes.id, 'view']">{{ estudiantes.id }}</a
+              >{{ last ? '' : ', ' }}
+            </span>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/padre', padre.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/padre', padre.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(padre)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

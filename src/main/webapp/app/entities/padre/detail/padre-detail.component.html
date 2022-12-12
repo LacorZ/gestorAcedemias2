@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="padre">
+      <h2 data-cy="padreDetailsHeading"><span jhiTranslate="gestorAcedemias2App.padre.detail.title">Padre</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ padre.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.padre.nombre">Nombre</span></dt>
+        <dd>
+          <span>{{ padre.nombre }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.padre.email">Email</span></dt>
+        <dd>
+          <span>{{ padre.email }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.padre.telefono">Telefono</span></dt>
+        <dd>
+          <span>{{ padre.telefono }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.padre.observaciones">Observaciones</span></dt>
+        <dd>
+          <span>{{ padre.observaciones }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.padre.estudiantes">Estudiantes</span></dt>
+        <dd>
+          <span *ngFor="let estudiantes of padre.estudiantes; let last = last">
+            <a [routerLink]="['/estudiante', estudiantes.id, 'view']">{{ estudiantes.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/padre', padre.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

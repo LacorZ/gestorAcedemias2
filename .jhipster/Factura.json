@@ -1,0 +1,48 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212212151",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "factura",
+  "fields": [
+    {
+      "fieldName": "facturado",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "fechaFactura",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Factura",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "estudiante",
+      "otherEntityRelationshipName": "factura",
+      "relationshipName": "estudiante",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "pago",
+      "relationshipName": "pagos",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "pago",
+      "otherEntityRelationshipName": "factura",
+      "relationshipName": "pago",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

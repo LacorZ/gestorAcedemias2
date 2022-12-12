@@ -1,0 +1,52 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212212150",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "asistencia",
+  "fields": [
+    {
+      "fieldName": "fecha",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "AsistenciaEstado",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "PRESENTE,AUSENTE,NO_DEFINIDO,OTRO"
+    },
+    {
+      "fieldName": "horaEntrada",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "horaSalida",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Asistencia",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "estudiante",
+      "otherEntityRelationshipName": "asistencia",
+      "relationshipName": "estudiante",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "curso",
+      "otherEntityRelationshipName": "asistencia",
+      "relationshipName": "curso",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "no"
+}

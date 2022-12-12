@@ -11,7 +11,19 @@
     <property name="datetimeType" value="datetime" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212146_added_entity_Curso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212147_added_entity_Tutor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212148_added_entity_Estudiante.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212149_added_entity_Padre.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212150_added_entity_Asistencia.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212151_added_entity_Factura.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212152_added_entity_Pago.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20221212212146_added_entity_constraints_Curso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212147_added_entity_constraints_Tutor.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212148_added_entity_constraints_Estudiante.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212149_added_entity_constraints_Padre.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221212212151_added_entity_constraints_Factura.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

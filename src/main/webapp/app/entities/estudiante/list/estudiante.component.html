@@ -1,0 +1,171 @@
+<div>
+  <h2 id="page-heading" data-cy="EstudianteHeading">
+    <span jhiTranslate="gestorAcedemias2App.estudiante.home.title">Estudiantes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="gestorAcedemias2App.estudiante.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-estudiante"
+        [routerLink]="['/estudiante/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="gestorAcedemias2App.estudiante.home.createLabel"> Crear nuevo Estudiante </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="estudiantes?.length === 0">
+    <span jhiTranslate="gestorAcedemias2App.estudiante.home.notFound">Ningún Estudiantes encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="estudiantes && estudiantes.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="nombre">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.nombre">Nombre</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="email">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.email">Email</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="telefono">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.telefono">Telefono</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="observaciones">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.observaciones">Observaciones</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="asistencias.id">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.asistencias">Asistencias</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="facturas.id">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.facturas">Facturas</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="asistencia.id">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.asistencia">Asistencia</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="factura.id">
+            <div class="d-flex">
+              <span jhiTranslate="gestorAcedemias2App.estudiante.factura">Factura</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let estudiante of estudiantes; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/estudiante', estudiante.id, 'view']">{{ estudiante.id }}</a>
+          </td>
+          <td>{{ estudiante.nombre }}</td>
+          <td>{{ estudiante.email }}</td>
+          <td>{{ estudiante.telefono }}</td>
+          <td>{{ estudiante.observaciones }}</td>
+          <td>
+            <div *ngIf="estudiante.asistencias">
+              <a [routerLink]="['/asistencia', estudiante.asistencias.id, 'view']">{{ estudiante.asistencias.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="estudiante.facturas">
+              <a [routerLink]="['/factura', estudiante.facturas.id, 'view']">{{ estudiante.facturas.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="estudiante.asistencia">
+              <a [routerLink]="['/asistencia', estudiante.asistencia.id, 'view']">{{ estudiante.asistencia.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="estudiante.factura">
+              <a [routerLink]="['/factura', estudiante.factura.id, 'view']">{{ estudiante.factura.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/estudiante', estudiante.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/estudiante', estudiante.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(estudiante)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="estudiantes && estudiantes.length > 0">
+    <div class="d-flex justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [page]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="navigateToPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

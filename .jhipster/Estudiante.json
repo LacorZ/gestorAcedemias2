@@ -1,0 +1,71 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212212148",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "estudiante",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "observaciones",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Estudiante",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "asistencia",
+      "relationshipName": "asistencias",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "factura",
+      "relationshipName": "facturas",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "curso",
+      "otherEntityRelationshipName": "estudiantes",
+      "ownerSide": true,
+      "relationshipName": "cursos",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "asistencia",
+      "otherEntityRelationshipName": "estudiante",
+      "relationshipName": "asistencia",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "factura",
+      "otherEntityRelationshipName": "estudiante",
+      "relationshipName": "factura",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "padre",
+      "otherEntityRelationshipName": "estudiantes",
+      "ownerSide": false,
+      "relationshipName": "padres",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

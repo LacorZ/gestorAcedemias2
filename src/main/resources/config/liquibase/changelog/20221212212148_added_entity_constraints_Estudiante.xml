@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Estudiante.
+    -->
+    <changeSet id="20221212212148-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="asistencias_id"
+                                 baseTableName="estudiante"
+                                 constraintName="fk_estudiante__asistencias_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="asistencia"/>
+
+        <addForeignKeyConstraint baseColumnNames="facturas_id"
+                                 baseTableName="estudiante"
+                                 constraintName="fk_estudiante__facturas_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="factura"/>
+
+        <addForeignKeyConstraint baseColumnNames="estudiante_id"
+                                 baseTableName="rel_estudiante__cursos"
+                                 constraintName="fk_rel_estudiante__cursos__estudiante_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="estudiante"/>
+
+        <addForeignKeyConstraint baseColumnNames="cursos_id"
+                                 baseTableName="rel_estudiante__cursos"
+                                 constraintName="fk_rel_estudiante__cursos__cursos_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="curso"/>
+
+        <addForeignKeyConstraint baseColumnNames="asistencia_id"
+                                 baseTableName="estudiante"
+                                 constraintName="fk_estudiante__asistencia_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="asistencia"/>
+
+        <addForeignKeyConstraint baseColumnNames="factura_id"
+                                 baseTableName="estudiante"
+                                 constraintName="fk_estudiante__factura_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="factura"/>
+    </changeSet>
+</databaseChangeLog>

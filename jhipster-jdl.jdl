@@ -1,0 +1,63 @@
+entity Course {
+    name String required,
+    description String,
+    price BigDecimal required,
+    duration Integer required
+}
+
+entity Tutor {
+    name String required,
+    email String required,
+    phone String
+    description String,
+    photo ImageBlob
+}
+
+entity Student {
+    name String required,
+    email String required,
+    phone String,
+    description String
+}
+
+
+
+entity Attendance {
+    course Course required,
+    student Student required,
+    date LocalDate required
+}
+
+entity Invoice {
+    student Student required,
+    amount BigDecimal required,
+    issuedAt Instant required,
+    dueAt Instant required
+}
+
+entity Payment {
+    invoice Invoice required,
+    amount BigDecimal required,
+    paidAt Instant required
+}
+
+entity PaymentMethod {
+    name String required
+}
+
+relationship OneToMany {
+    // CourseTutor{tutor} to Tutor
+    // CourseStudent{student} to Student
+    Attendance{student} to Student
+    Attendance{course} to Course
+    Invoice{student} to Student
+    Payment{invoice} to Invoice
+    Payment{paymentMethod} to PaymentMethod
+}
+
+relationship ManyToMany {
+    CourseTutor{course} to Course{courseTutors}
+    CourseStudent{course} to Course{courseStudents}
+}
+
+paginate Course, Tutor, Student, Attendance, Invoice, Payment, PaymentMethod with pagination

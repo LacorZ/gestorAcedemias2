@@ -1,0 +1,1 @@
+jhipster jdl jhipster-jdl.jdl

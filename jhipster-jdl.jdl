@@ -1,63 +1,83 @@
-entity Course {
-    name String required,
-    description String,
+entity Curso {
+    nombre String required,
+    descripcion String,
     price BigDecimal required,
-    duration Integer required
+    fechaInicio LocalDate ,
+    fechaFin LocalDate ,
+    observaciones String
 }
 
 entity Tutor {
-    name String required,
+    nombre String required,
     email String required,
-    phone String
-    description String,
-    photo ImageBlob
+    telefono String,
+    observaciones String
 }
 
-entity Student {
-    name String required,
+entity Estudiante {
+    nombre String required,
     email String required,
-    phone String,
-    description String
+    telefono String,
+    observaciones String
+}
+
+entity Padre {
+    nombre String required,
+    email String required,
+    telefono String,
+    observaciones String
 }
 
 
 
-entity Attendance {
-    course Course required,
-    student Student required,
-    date LocalDate required
+entity Asistencia {
+    date LocalDate required,
+    estado AsistenciaEstado required,
+    observaciones String
 }
 
-entity Invoice {
-    student Student required,
-    amount BigDecimal required,
-    issuedAt Instant required,
-    dueAt Instant required
+entity Factura {
+    facturado BigDecimal required,
+    fechaFactura Instant required,
+    observaciones String
 }
 
-entity Payment {
-    invoice Invoice required,
-    amount BigDecimal required,
-    paidAt Instant required
+entity Pago {
+    cantidad BigDecimal required,
+    fechaPago Instant required,
+    metodoPago MetodoPago required,
+    observaciones String
 }
 
-entity PaymentMethod {
-    name String required
+enum MetodoPago {
+    EFECTIVO, TARJETA, CHEQUE, TRANSFERENCIA, DEPOSITO, OTRO
+}
+
+enum AsistenciaEstado {
+    PRESENTE, AUSENTE, NO_DEFINIDO
 }
 
 relationship OneToMany {
-    // CourseTutor{tutor} to Tutor
-    // CourseStudent{student} to Student
-    Attendance{student} to Student
-    Attendance{course} to Course
-    Invoice{student} to Student
-    Payment{invoice} to Invoice
-    Payment{paymentMethod} to PaymentMethod
+    Asistencia{estudiante} to Estudiante
+    Asistencia{curso} to Curso
+    Factura{estudiante} to Estudiante
+    Pago{Factura} to Factura
 }
+
+relationship ManyToOne {   
+    Estudiante{asistencias} to Asistencia
+    Curso{asistencias} to Asistencia
+    Estudiante{facturas} to Factura
+    Factura{pagos} to Pago         
+
+}
+
+
 
 relationship ManyToMany {
-    CourseTutor{course} to Course{courseTutors}
-    CourseStudent{course} to Course{courseStudents}
+    Tutor{cursos} to Curso{tutors}
+    Estudiante{cursos} to Curso{estudiantes}
+    Padre{estudiantes} to Estudiante{padres}
 }
 
-paginate Course, Tutor, Student, Attendance, Invoice, Payment, PaymentMethod with pagination
+paginate Curso, Tutor, Estudiante, Asistencia, Factura, Pago with pagination

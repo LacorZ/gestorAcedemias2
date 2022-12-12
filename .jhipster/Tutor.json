@@ -1,0 +1,47 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212201200",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "tutor",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "phone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "photo",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Tutor",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "course",
+      "otherEntityRelationshipName": "tutors",
+      "ownerSide": true,
+      "relationshipName": "courses",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

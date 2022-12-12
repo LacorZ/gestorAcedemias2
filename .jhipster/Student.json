@@ -1,0 +1,54 @@
+{
+  "applications": "*",
+  "changelogDate": "20221212201201",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "student",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "phone",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Student",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "course",
+      "otherEntityRelationshipName": "students",
+      "ownerSide": true,
+      "relationshipName": "courses",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "attendance",
+      "otherEntityRelationshipName": "student",
+      "relationshipName": "attendance",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "invoice",
+      "otherEntityRelationshipName": "student",
+      "relationshipName": "invoice",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

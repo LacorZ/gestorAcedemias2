@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="tutor">
+      <h2 data-cy="tutorDetailsHeading"><span jhiTranslate="gestorAcedemias2App.tutor.detail.title">Tutor</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ tutor.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.name">Name</span></dt>
+        <dd>
+          <span>{{ tutor.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.email">Email</span></dt>
+        <dd>
+          <span>{{ tutor.email }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.phone">Phone</span></dt>
+        <dd>
+          <span>{{ tutor.phone }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.description">Description</span></dt>
+        <dd>
+          <span>{{ tutor.description }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.photo">Photo</span></dt>
+        <dd>
+          <div *ngIf="tutor.photo">
+            <a (click)="openFile(tutor.photo, tutor.photoContentType)">
+              <img [src]="'data:' + tutor.photoContentType + ';base64,' + tutor.photo" style="max-width: 100%" alt="tutor image" />
+            </a>
+            {{ tutor.photoContentType }}, {{ byteSize(tutor.photo) }}
+          </div>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.tutor.courses">Courses</span></dt>
+        <dd>
+          <span *ngFor="let courses of tutor.courses; let last = last">
+            <a [routerLink]="['/course', courses.id, 'view']">{{ courses.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/tutor', tutor.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

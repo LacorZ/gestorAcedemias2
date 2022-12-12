@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="invoice">
+      <h2 data-cy="invoiceDetailsHeading"><span jhiTranslate="gestorAcedemias2App.invoice.detail.title">Invoice</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ invoice.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.invoice.amount">Amount</span></dt>
+        <dd>
+          <span>{{ invoice.amount }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.invoice.issuedAt">Issued At</span></dt>
+        <dd>
+          <span>{{ invoice.issuedAt | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.invoice.dueAt">Due At</span></dt>
+        <dd>
+          <span>{{ invoice.dueAt | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="gestorAcedemias2App.invoice.payment">Payment</span></dt>
+        <dd>
+          <div *ngIf="invoice.payment">
+            <a [routerLink]="['/payment', invoice.payment.id, 'view']">{{ invoice.payment.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/invoice', invoice.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

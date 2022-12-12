@@ -48,22 +48,6 @@ public class CacheConfiguration {
             createCache(cm, com.rts.gestor.academia.domain.User.class.getName());
             createCache(cm, com.rts.gestor.academia.domain.Authority.class.getName());
             createCache(cm, com.rts.gestor.academia.domain.User.class.getName() + ".authorities");
-            createCache(cm, com.rts.gestor.academia.domain.Course.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Course.class.getName() + ".tutors");
-            createCache(cm, com.rts.gestor.academia.domain.Course.class.getName() + ".students");
-            createCache(cm, com.rts.gestor.academia.domain.Tutor.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Tutor.class.getName() + ".courses");
-            createCache(cm, com.rts.gestor.academia.domain.Student.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Student.class.getName() + ".courses");
-            createCache(cm, com.rts.gestor.academia.domain.Attendance.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Attendance.class.getName() + ".students");
-            createCache(cm, com.rts.gestor.academia.domain.Attendance.class.getName() + ".courses");
-            createCache(cm, com.rts.gestor.academia.domain.Invoice.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Invoice.class.getName() + ".students");
-            createCache(cm, com.rts.gestor.academia.domain.Payment.class.getName());
-            createCache(cm, com.rts.gestor.academia.domain.Payment.class.getName() + ".invoices");
-            createCache(cm, com.rts.gestor.academia.domain.Payment.class.getName() + ".paymentMethods");
-            createCache(cm, com.rts.gestor.academia.domain.PaymentMethod.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

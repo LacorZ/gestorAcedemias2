@@ -23,20 +23,20 @@ entity Student {
 
 
 entity Attendance {
-    // course Course required,
-    // student Student required,
+    course Course required,
+    student Student required,
     date LocalDate required
 }
 
 entity Invoice {
-    // student Student required,
+    student Student required,
     amount BigDecimal required,
     issuedAt Instant required,
     dueAt Instant required
 }
 
 entity Payment {
-    // invoice Invoice required,
+    invoice Invoice required,
     amount BigDecimal required,
     paidAt Instant required
 }
@@ -56,8 +56,8 @@ relationship OneToMany {
 }
 
 relationship ManyToMany {
-    Tutor{courses} to Course{tutors}
-    Student{courses} to Course{students}
+    CourseTutor{course} to Course{courseTutors}
+    CourseStudent{course} to Course{courseStudents}
 }
 
 paginate Course, Tutor, Student, Attendance, Invoice, Payment, PaymentMethod with pagination

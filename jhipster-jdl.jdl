@@ -28,11 +28,11 @@ entity Padre {
     observaciones String
 }
 
-
-
 entity Asistencia {
-    date LocalDate required,
-    estado AsistenciaEstado required,
+    fecha LocalDate required,
+    estado AsistenciaEstado required,    
+    horaEntrada Instant,
+    horaSalida Instant,
     observaciones String
 }
 
@@ -54,7 +54,7 @@ enum MetodoPago {
 }
 
 enum AsistenciaEstado {
-    PRESENTE, AUSENTE, NO_DEFINIDO
+    PRESENTE, AUSENTE, NO_DEFINIDO, OTRO
 }
 
 relationship OneToMany {

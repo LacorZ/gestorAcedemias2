@@ -7,8 +7,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.rts.gestor.academia.IntegrationTest;
+import com.rts.gestor.academia.domain.Curso;
 import com.rts.gestor.academia.domain.Tutor;
 import com.rts.gestor.academia.repository.TutorRepository;
+import com.rts.gestor.academia.service.TutorService;
+import com.rts.gestor.academia.service.criteria.TutorCriteria;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -61,6 +64,9 @@ class TutorResourceIT {
 
     @Mock
     private TutorRepository tutorRepositoryMock;
+
+    @Mock
+    private TutorService tutorServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -196,16 +202,16 @@ class TutorResourceIT {
 
     @SuppressWarnings({ "unchecked" })
     void getAllTutorsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(tutorRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(tutorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restTutorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
-        verify(tutorRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+        verify(tutorServiceMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @SuppressWarnings({ "unchecked" })
     void getAllTutorsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(tutorRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(tutorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restTutorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
         verify(tutorRepositoryMock, times(1)).findAll(any(Pageable.class));
@@ -227,6 +233,348 @@ class TutorResourceIT {
             .andExpect(jsonPath("$.email").value(DEFAULT_EMAIL))
             .andExpect(jsonPath("$.telefono").value(DEFAULT_TELEFONO))
             .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES));
+    }
+
+    @Test
+    @Transactional
+    void getTutorsByIdFiltering() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        Long id = tutor.getId();
+
+        defaultTutorShouldBeFound("id.equals=" + id);
+        defaultTutorShouldNotBeFound("id.notEquals=" + id);
+
+        defaultTutorShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultTutorShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultTutorShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultTutorShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByNombreIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where nombre equals to DEFAULT_NOMBRE
+        defaultTutorShouldBeFound("nombre.equals=" + DEFAULT_NOMBRE);
+
+        // Get all the tutorList where nombre equals to UPDATED_NOMBRE
+        defaultTutorShouldNotBeFound("nombre.equals=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByNombreIsInShouldWork() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where nombre in DEFAULT_NOMBRE or UPDATED_NOMBRE
+        defaultTutorShouldBeFound("nombre.in=" + DEFAULT_NOMBRE + "," + UPDATED_NOMBRE);
+
+        // Get all the tutorList where nombre equals to UPDATED_NOMBRE
+        defaultTutorShouldNotBeFound("nombre.in=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByNombreIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where nombre is not null
+        defaultTutorShouldBeFound("nombre.specified=true");
+
+        // Get all the tutorList where nombre is null
+        defaultTutorShouldNotBeFound("nombre.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByNombreContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where nombre contains DEFAULT_NOMBRE
+        defaultTutorShouldBeFound("nombre.contains=" + DEFAULT_NOMBRE);
+
+        // Get all the tutorList where nombre contains UPDATED_NOMBRE
+        defaultTutorShouldNotBeFound("nombre.contains=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByNombreNotContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where nombre does not contain DEFAULT_NOMBRE
+        defaultTutorShouldNotBeFound("nombre.doesNotContain=" + DEFAULT_NOMBRE);
+
+        // Get all the tutorList where nombre does not contain UPDATED_NOMBRE
+        defaultTutorShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByEmailIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where email equals to DEFAULT_EMAIL
+        defaultTutorShouldBeFound("email.equals=" + DEFAULT_EMAIL);
+
+        // Get all the tutorList where email equals to UPDATED_EMAIL
+        defaultTutorShouldNotBeFound("email.equals=" + UPDATED_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByEmailIsInShouldWork() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where email in DEFAULT_EMAIL or UPDATED_EMAIL
+        defaultTutorShouldBeFound("email.in=" + DEFAULT_EMAIL + "," + UPDATED_EMAIL);
+
+        // Get all the tutorList where email equals to UPDATED_EMAIL
+        defaultTutorShouldNotBeFound("email.in=" + UPDATED_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByEmailIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where email is not null
+        defaultTutorShouldBeFound("email.specified=true");
+
+        // Get all the tutorList where email is null
+        defaultTutorShouldNotBeFound("email.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByEmailContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where email contains DEFAULT_EMAIL
+        defaultTutorShouldBeFound("email.contains=" + DEFAULT_EMAIL);
+
+        // Get all the tutorList where email contains UPDATED_EMAIL
+        defaultTutorShouldNotBeFound("email.contains=" + UPDATED_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByEmailNotContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where email does not contain DEFAULT_EMAIL
+        defaultTutorShouldNotBeFound("email.doesNotContain=" + DEFAULT_EMAIL);
+
+        // Get all the tutorList where email does not contain UPDATED_EMAIL
+        defaultTutorShouldBeFound("email.doesNotContain=" + UPDATED_EMAIL);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByTelefonoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where telefono equals to DEFAULT_TELEFONO
+        defaultTutorShouldBeFound("telefono.equals=" + DEFAULT_TELEFONO);
+
+        // Get all the tutorList where telefono equals to UPDATED_TELEFONO
+        defaultTutorShouldNotBeFound("telefono.equals=" + UPDATED_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByTelefonoIsInShouldWork() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where telefono in DEFAULT_TELEFONO or UPDATED_TELEFONO
+        defaultTutorShouldBeFound("telefono.in=" + DEFAULT_TELEFONO + "," + UPDATED_TELEFONO);
+
+        // Get all the tutorList where telefono equals to UPDATED_TELEFONO
+        defaultTutorShouldNotBeFound("telefono.in=" + UPDATED_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByTelefonoIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where telefono is not null
+        defaultTutorShouldBeFound("telefono.specified=true");
+
+        // Get all the tutorList where telefono is null
+        defaultTutorShouldNotBeFound("telefono.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByTelefonoContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where telefono contains DEFAULT_TELEFONO
+        defaultTutorShouldBeFound("telefono.contains=" + DEFAULT_TELEFONO);
+
+        // Get all the tutorList where telefono contains UPDATED_TELEFONO
+        defaultTutorShouldNotBeFound("telefono.contains=" + UPDATED_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByTelefonoNotContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where telefono does not contain DEFAULT_TELEFONO
+        defaultTutorShouldNotBeFound("telefono.doesNotContain=" + DEFAULT_TELEFONO);
+
+        // Get all the tutorList where telefono does not contain UPDATED_TELEFONO
+        defaultTutorShouldBeFound("telefono.doesNotContain=" + UPDATED_TELEFONO);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByObservacionesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where observaciones equals to DEFAULT_OBSERVACIONES
+        defaultTutorShouldBeFound("observaciones.equals=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the tutorList where observaciones equals to UPDATED_OBSERVACIONES
+        defaultTutorShouldNotBeFound("observaciones.equals=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByObservacionesIsInShouldWork() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where observaciones in DEFAULT_OBSERVACIONES or UPDATED_OBSERVACIONES
+        defaultTutorShouldBeFound("observaciones.in=" + DEFAULT_OBSERVACIONES + "," + UPDATED_OBSERVACIONES);
+
+        // Get all the tutorList where observaciones equals to UPDATED_OBSERVACIONES
+        defaultTutorShouldNotBeFound("observaciones.in=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByObservacionesIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where observaciones is not null
+        defaultTutorShouldBeFound("observaciones.specified=true");
+
+        // Get all the tutorList where observaciones is null
+        defaultTutorShouldNotBeFound("observaciones.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByObservacionesContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where observaciones contains DEFAULT_OBSERVACIONES
+        defaultTutorShouldBeFound("observaciones.contains=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the tutorList where observaciones contains UPDATED_OBSERVACIONES
+        defaultTutorShouldNotBeFound("observaciones.contains=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByObservacionesNotContainsSomething() throws Exception {
+        // Initialize the database
+        tutorRepository.saveAndFlush(tutor);
+
+        // Get all the tutorList where observaciones does not contain DEFAULT_OBSERVACIONES
+        defaultTutorShouldNotBeFound("observaciones.doesNotContain=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the tutorList where observaciones does not contain UPDATED_OBSERVACIONES
+        defaultTutorShouldBeFound("observaciones.doesNotContain=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllTutorsByCursosIsEqualToSomething() throws Exception {
+        Curso cursos;
+        if (TestUtil.findAll(em, Curso.class).isEmpty()) {
+            tutorRepository.saveAndFlush(tutor);
+            cursos = CursoResourceIT.createEntity(em);
+        } else {
+            cursos = TestUtil.findAll(em, Curso.class).get(0);
+        }
+        em.persist(cursos);
+        em.flush();
+        tutor.addCursos(cursos);
+        tutorRepository.saveAndFlush(tutor);
+        Long cursosId = cursos.getId();
+
+        // Get all the tutorList where cursos equals to cursosId
+        defaultTutorShouldBeFound("cursosId.equals=" + cursosId);
+
+        // Get all the tutorList where cursos equals to (cursosId + 1)
+        defaultTutorShouldNotBeFound("cursosId.equals=" + (cursosId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultTutorShouldBeFound(String filter) throws Exception {
+        restTutorMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(tutor.getId().intValue())))
+            .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
+            .andExpect(jsonPath("$.[*].email").value(hasItem(DEFAULT_EMAIL)))
+            .andExpect(jsonPath("$.[*].telefono").value(hasItem(DEFAULT_TELEFONO)))
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
+
+        // Check, that the count call also returns 1
+        restTutorMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultTutorShouldNotBeFound(String filter) throws Exception {
+        restTutorMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restTutorMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

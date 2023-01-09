@@ -1,12 +1,3 @@
-entity Curso {
-    nombre String required,
-    descripcion String,
-    price BigDecimal required,
-    fechaInicio LocalDate ,
-    fechaFin LocalDate ,
-    observaciones String
-}
-
 entity Tutor {
     nombre String required,
     email String required,
@@ -49,6 +40,8 @@ entity Pago {
     observaciones String
 }
 
+
+
 enum MetodoPago {
     EFECTIVO, TARJETA, CHEQUE, TRANSFERENCIA, DEPOSITO, OTRO
 }
@@ -58,15 +51,13 @@ enum AsistenciaEstado {
 }
 
 relationship OneToMany {
-    Asistencia{estudiante} to Estudiante
-    Asistencia{curso} to Curso
-    Factura{estudiante} to Estudiante
+    Asistencia{estudiante(nombre)} to Estudiante    
+    Factura{estudiante(nombre)} to Estudiante
     Pago{Factura} to Factura
 }
 
 relationship ManyToOne {   
-    Estudiante{asistencias} to Asistencia
-    Curso{asistencias} to Asistencia
+    Estudiante{asistencias} to Asistencia    
     Estudiante{facturas} to Factura
     Factura{pagos} to Pago         
 
@@ -74,10 +65,12 @@ relationship ManyToOne {
 
 
 
-relationship ManyToMany {
-    Tutor{cursos} to Curso{tutors}
-    Estudiante{cursos} to Curso{estudiantes}
-    Padre{estudiantes} to Estudiante{padres}
+relationship ManyToMany {    
+    Padre{estudiantes(nombre)} to Estudiante{padres(nombre)}
 }
 
-paginate Curso, Tutor, Estudiante, Asistencia, Factura, Pago with pagination
+paginate  Tutor, Estudiante, Asistencia, Factura, Pago with pagination
+
+
+service * with serviceClass
+filter * 

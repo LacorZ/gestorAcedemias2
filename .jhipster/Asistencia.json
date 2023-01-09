@@ -30,23 +30,25 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Asistencia",
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "estudiante",
       "otherEntityRelationshipName": "asistencia",
       "relationshipName": "estudiante",
       "relationshipType": "one-to-many"
     },
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "curso",
       "otherEntityRelationshipName": "asistencia",
       "relationshipName": "curso",
       "relationshipType": "one-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

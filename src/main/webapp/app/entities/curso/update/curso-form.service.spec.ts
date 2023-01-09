@@ -22,13 +22,12 @@ describe('Curso Form Service', () => {
             id: expect.any(Object),
             nombre: expect.any(Object),
             descripcion: expect.any(Object),
-            price: expect.any(Object),
             fechaInicio: expect.any(Object),
             fechaFin: expect.any(Object),
             observaciones: expect.any(Object),
             asistencias: expect.any(Object),
             asistencia: expect.any(Object),
-            tutors: expect.any(Object),
+            tutores: expect.any(Object),
             estudiantes: expect.any(Object),
           })
         );
@@ -42,13 +41,12 @@ describe('Curso Form Service', () => {
             id: expect.any(Object),
             nombre: expect.any(Object),
             descripcion: expect.any(Object),
-            price: expect.any(Object),
             fechaInicio: expect.any(Object),
             fechaFin: expect.any(Object),
             observaciones: expect.any(Object),
             asistencias: expect.any(Object),
             asistencia: expect.any(Object),
-            tutors: expect.any(Object),
+            tutores: expect.any(Object),
             estudiantes: expect.any(Object),
           })
         );

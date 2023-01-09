@@ -36,19 +36,6 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="gestorAcedemias2App.curso.price" for="field_price">Price</label>
-          <input type="number" class="form-control" name="price" id="field_price" data-cy="price" formControlName="price" />
-          <div *ngIf="editForm.get('price')!.invalid && (editForm.get('price')!.dirty || editForm.get('price')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('price')?.errors?.required" jhiTranslate="entity.validation.required">
-              Este campo es obligatorio.
-            </small>
-            <small class="form-text text-danger" [hidden]="!editForm.get('price')?.errors?.number" jhiTranslate="entity.validation.number">
-              Este campo debe ser un número.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
           <label class="form-label" jhiTranslate="gestorAcedemias2App.curso.fechaInicio" for="field_fechaInicio">Fecha Inicio</label>
           <div class="input-group">
             <input

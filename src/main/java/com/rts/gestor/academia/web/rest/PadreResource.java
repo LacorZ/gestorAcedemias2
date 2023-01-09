@@ -2,6 +2,9 @@ package com.rts.gestor.academia.web.rest;
 
 import com.rts.gestor.academia.domain.Padre;
 import com.rts.gestor.academia.repository.PadreRepository;
+import com.rts.gestor.academia.service.PadreQueryService;
+import com.rts.gestor.academia.service.PadreService;
+import com.rts.gestor.academia.service.criteria.PadreCriteria;
 import com.rts.gestor.academia.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -14,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -24,7 +26,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class PadreResource {
 
     private final Logger log = LoggerFactory.getLogger(PadreResource.class);
@@ -34,10 +35,16 @@ public class PadreResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final PadreService padreService;
+
     private final PadreRepository padreRepository;
 
-    public PadreResource(PadreRepository padreRepository) {
+    private final PadreQueryService padreQueryService;
+
+    public PadreResource(PadreService padreService, PadreRepository padreRepository, PadreQueryService padreQueryService) {
+        this.padreService = padreService;
         this.padreRepository = padreRepository;
+        this.padreQueryService = padreQueryService;
     }
 
     /**
@@ -53,7 +60,7 @@ public class PadreResource {
         if (padre.getId() != null) {
             throw new BadRequestAlertException("A new padre cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Padre result = padreRepository.save(padre);
+        Padre result = padreService.save(padre);
         return ResponseEntity
             .created(new URI("/api/padres/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -85,7 +92,7 @@ public class PadreResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Padre result = padreRepository.save(padre);
+        Padre result = padreService.update(padre);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, padre.getId().toString()))
@@ -120,25 +127,7 @@ public class PadreResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Padre> result = padreRepository
-            .findById(padre.getId())
-            .map(existingPadre -> {
-                if (padre.getNombre() != null) {
-                    existingPadre.setNombre(padre.getNombre());
-                }
-                if (padre.getEmail() != null) {
-                    existingPadre.setEmail(padre.getEmail());
-                }
-                if (padre.getTelefono() != null) {
-                    existingPadre.setTelefono(padre.getTelefono());
-                }
-                if (padre.getObservaciones() != null) {
-                    existingPadre.setObservaciones(padre.getObservaciones());
-                }
-
-                return existingPadre;
-            })
-            .map(padreRepository::save);
+        Optional<Padre> result = padreService.partialUpdate(padre);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -149,17 +138,26 @@ public class PadreResource {
     /**
      * {@code GET  /padres} : get all the padres.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of padres in body.
      */
     @GetMapping("/padres")
-    public List<Padre> getAllPadres(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
-        log.debug("REST request to get all Padres");
-        if (eagerload) {
-            return padreRepository.findAllWithEagerRelationships();
-        } else {
-            return padreRepository.findAll();
-        }
+    public ResponseEntity<List<Padre>> getAllPadres(PadreCriteria criteria) {
+        log.debug("REST request to get Padres by criteria: {}", criteria);
+        List<Padre> entityList = padreQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /padres/count} : count all the padres.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/padres/count")
+    public ResponseEntity<Long> countPadres(PadreCriteria criteria) {
+        log.debug("REST request to count Padres by criteria: {}", criteria);
+        return ResponseEntity.ok().body(padreQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -171,7 +169,7 @@ public class PadreResource {
     @GetMapping("/padres/{id}")
     public ResponseEntity<Padre> getPadre(@PathVariable Long id) {
         log.debug("REST request to get Padre : {}", id);
-        Optional<Padre> padre = padreRepository.findOneWithEagerRelationships(id);
+        Optional<Padre> padre = padreService.findOne(id);
         return ResponseUtil.wrapOrNotFound(padre);
     }
 
@@ -184,7 +182,7 @@ public class PadreResource {
     @DeleteMapping("/padres/{id}")
     public ResponseEntity<Void> deletePadre(@PathVariable Long id) {
         log.debug("REST request to delete Padre : {}", id);
-        padreRepository.deleteById(id);
+        padreService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

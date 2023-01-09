@@ -14,19 +14,18 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type CursoFormGroupInput = ICurso | PartialWithRequiredKeyOf<NewCurso>;
 
-type CursoFormDefaults = Pick<NewCurso, 'id' | 'tutors' | 'estudiantes'>;
+type CursoFormDefaults = Pick<NewCurso, 'id' | 'tutores' | 'estudiantes'>;
 
 type CursoFormGroupContent = {
   id: FormControl<ICurso['id'] | NewCurso['id']>;
   nombre: FormControl<ICurso['nombre']>;
   descripcion: FormControl<ICurso['descripcion']>;
-  price: FormControl<ICurso['price']>;
   fechaInicio: FormControl<ICurso['fechaInicio']>;
   fechaFin: FormControl<ICurso['fechaFin']>;
   observaciones: FormControl<ICurso['observaciones']>;
   asistencias: FormControl<ICurso['asistencias']>;
   asistencia: FormControl<ICurso['asistencia']>;
-  tutors: FormControl<ICurso['tutors']>;
+  tutores: FormControl<ICurso['tutores']>;
   estudiantes: FormControl<ICurso['estudiantes']>;
 };
 
@@ -51,15 +50,12 @@ export class CursoFormService {
         validators: [Validators.required],
       }),
       descripcion: new FormControl(cursoRawValue.descripcion),
-      price: new FormControl(cursoRawValue.price, {
-        validators: [Validators.required],
-      }),
       fechaInicio: new FormControl(cursoRawValue.fechaInicio),
       fechaFin: new FormControl(cursoRawValue.fechaFin),
       observaciones: new FormControl(cursoRawValue.observaciones),
       asistencias: new FormControl(cursoRawValue.asistencias),
       asistencia: new FormControl(cursoRawValue.asistencia),
-      tutors: new FormControl(cursoRawValue.tutors ?? []),
+      tutores: new FormControl(cursoRawValue.tutores ?? []),
       estudiantes: new FormControl(cursoRawValue.estudiantes ?? []),
     });
   }
@@ -81,7 +77,7 @@ export class CursoFormService {
   private getFormDefaults(): CursoFormDefaults {
     return {
       id: null,
-      tutors: [],
+      tutores: [],
       estudiantes: [],
     };
   }

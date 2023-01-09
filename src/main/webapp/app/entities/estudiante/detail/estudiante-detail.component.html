@@ -45,7 +45,7 @@
         <dt><span jhiTranslate="gestorAcedemias2App.estudiante.cursos">Cursos</span></dt>
         <dd>
           <span *ngFor="let cursos of estudiante.cursos; let last = last">
-            <a [routerLink]="['/curso', cursos.id, 'view']">{{ cursos.id }}</a
+            <a [routerLink]="['/curso', cursos.id, 'view']">{{ cursos.nombre }}</a
             >{{ last ? '' : ', ' }}
           </span>
         </dd>

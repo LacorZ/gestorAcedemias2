@@ -25,12 +25,13 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Padre",
   "pagination": "no",
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "estudiante",
       "otherEntityRelationshipName": "padres",
       "ownerSide": true,
@@ -38,5 +39,5 @@
       "relationshipType": "many-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

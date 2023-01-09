@@ -2,6 +2,9 @@ package com.rts.gestor.academia.web.rest;
 
 import com.rts.gestor.academia.domain.Curso;
 import com.rts.gestor.academia.repository.CursoRepository;
+import com.rts.gestor.academia.service.CursoQueryService;
+import com.rts.gestor.academia.service.CursoService;
+import com.rts.gestor.academia.service.criteria.CursoCriteria;
 import com.rts.gestor.academia.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,7 +31,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class CursoResource {
 
     private final Logger log = LoggerFactory.getLogger(CursoResource.class);
@@ -40,10 +40,16 @@ public class CursoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final CursoService cursoService;
+
     private final CursoRepository cursoRepository;
 
-    public CursoResource(CursoRepository cursoRepository) {
+    private final CursoQueryService cursoQueryService;
+
+    public CursoResource(CursoService cursoService, CursoRepository cursoRepository, CursoQueryService cursoQueryService) {
+        this.cursoService = cursoService;
         this.cursoRepository = cursoRepository;
+        this.cursoQueryService = cursoQueryService;
     }
 
     /**
@@ -59,7 +65,7 @@ public class CursoResource {
         if (curso.getId() != null) {
             throw new BadRequestAlertException("A new curso cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Curso result = cursoRepository.save(curso);
+        Curso result = cursoService.save(curso);
         return ResponseEntity
             .created(new URI("/api/cursos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -91,7 +97,7 @@ public class CursoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Curso result = cursoRepository.save(curso);
+        Curso result = cursoService.update(curso);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, curso.getId().toString()))
@@ -126,31 +132,7 @@ public class CursoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Curso> result = cursoRepository
-            .findById(curso.getId())
-            .map(existingCurso -> {
-                if (curso.getNombre() != null) {
-                    existingCurso.setNombre(curso.getNombre());
-                }
-                if (curso.getDescripcion() != null) {
-                    existingCurso.setDescripcion(curso.getDescripcion());
-                }
-                if (curso.getPrice() != null) {
-                    existingCurso.setPrice(curso.getPrice());
-                }
-                if (curso.getFechaInicio() != null) {
-                    existingCurso.setFechaInicio(curso.getFechaInicio());
-                }
-                if (curso.getFechaFin() != null) {
-                    existingCurso.setFechaFin(curso.getFechaFin());
-                }
-                if (curso.getObservaciones() != null) {
-                    existingCurso.setObservaciones(curso.getObservaciones());
-                }
-
-                return existingCurso;
-            })
-            .map(cursoRepository::save);
+        Optional<Curso> result = cursoService.partialUpdate(curso);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -162,14 +144,30 @@ public class CursoResource {
      * {@code GET  /cursos} : get all the cursos.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of cursos in body.
      */
     @GetMapping("/cursos")
-    public ResponseEntity<List<Curso>> getAllCursos(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Cursos");
-        Page<Curso> page = cursoRepository.findAll(pageable);
+    public ResponseEntity<List<Curso>> getAllCursos(
+        CursoCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get Cursos by criteria: {}", criteria);
+        Page<Curso> page = cursoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /cursos/count} : count all the cursos.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/cursos/count")
+    public ResponseEntity<Long> countCursos(CursoCriteria criteria) {
+        log.debug("REST request to count Cursos by criteria: {}", criteria);
+        return ResponseEntity.ok().body(cursoQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -181,7 +179,7 @@ public class CursoResource {
     @GetMapping("/cursos/{id}")
     public ResponseEntity<Curso> getCurso(@PathVariable Long id) {
         log.debug("REST request to get Curso : {}", id);
-        Optional<Curso> curso = cursoRepository.findById(id);
+        Optional<Curso> curso = cursoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(curso);
     }
 
@@ -194,7 +192,7 @@ public class CursoResource {
     @DeleteMapping("/cursos/{id}")
     public ResponseEntity<Void> deleteCurso(@PathVariable Long id) {
         log.debug("REST request to delete Curso : {}", id);
-        cursoRepository.deleteById(id);
+        cursoService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

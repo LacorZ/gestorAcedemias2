@@ -24,6 +24,8 @@
 
   <jhi-alert></jhi-alert>
 
+  <jhi-filter [filters]="filters"></jhi-filter>
+
   <div class="alert alert-warning" id="no-result" *ngIf="facturas?.length === 0">
     <span jhiTranslate="gestorAcedemias2App.factura.home.notFound">Ningún Facturas encontrado</span>
   </div>
@@ -91,6 +93,21 @@
           </td>
           <td class="text-end">
             <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/estudiante']"
+                [queryParams]="{ 'filter[facturaId.in]': factura.id }"
+                class="btn btn-info btn-sm"
+                data-cy="filterOtherEntityButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span
+                  class="d-none d-md-inline"
+                  jhiTranslate="entity.action.show"
+                  [translateValues]="{ otherEntity: ('gestorAcedemias2App.factura.estudiante' | translate) }"
+                  >Show Estudiante</span
+                >
+              </button>
               <button
                 type="submit"
                 [routerLink]="['/factura', factura.id, 'view']"

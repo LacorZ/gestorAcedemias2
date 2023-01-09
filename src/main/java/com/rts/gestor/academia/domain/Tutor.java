@@ -47,7 +47,7 @@ public class Tutor implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "cursos_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "asistencias", "asistencia", "tutors", "estudiantes" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "asistencias", "asistencia", "tutores", "estudiantes" }, allowSetters = true)
     private Set<Curso> cursos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -132,13 +132,13 @@ public class Tutor implements Serializable {
 
     public Tutor addCursos(Curso curso) {
         this.cursos.add(curso);
-        curso.getTutors().add(this);
+        curso.getTutores().add(this);
         return this;
     }
 
     public Tutor removeCursos(Curso curso) {
         this.cursos.remove(curso);
-        curso.getTutors().remove(this);
+        curso.getTutores().remove(this);
         return this;
     }
 

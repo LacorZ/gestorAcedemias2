@@ -62,7 +62,7 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="estudiantes.id">
+          <th scope="col" jhiSortBy="estudiantes.nombre">
             <div class="d-flex">
               <span jhiTranslate="gestorAcedemias2App.padre.estudiantes">Estudiantes</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -82,7 +82,7 @@
           <td>{{ padre.observaciones }}</td>
           <td>
             <span *ngFor="let estudiantes of padre.estudiantes; let last = last">
-              <a class="form-control-static" [routerLink]="['/estudiante', estudiantes.id, 'view']">{{ estudiantes.id }}</a
+              <a class="form-control-static" [routerLink]="['/estudiante', estudiantes.id, 'view']">{{ estudiantes.nombre }}</a
               >{{ last ? '' : ', ' }}
             </span>
           </td>

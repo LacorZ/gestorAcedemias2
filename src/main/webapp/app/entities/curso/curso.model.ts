@@ -7,14 +7,13 @@ export interface ICurso {
   id: number;
   nombre?: string | null;
   descripcion?: string | null;
-  price?: number | null;
   fechaInicio?: dayjs.Dayjs | null;
   fechaFin?: dayjs.Dayjs | null;
   observaciones?: string | null;
   asistencias?: Pick<IAsistencia, 'id'> | null;
   asistencia?: Pick<IAsistencia, 'id'> | null;
-  tutors?: Pick<ITutor, 'id'>[] | null;
-  estudiantes?: Pick<IEstudiante, 'id'>[] | null;
+  tutores?: Pick<ITutor, 'id' | 'nombre'>[] | null;
+  estudiantes?: Pick<IEstudiante, 'id' | 'nombre'>[] | null;
 }
 
 export type NewCurso = Omit<ICurso, 'id'> & { id: null };

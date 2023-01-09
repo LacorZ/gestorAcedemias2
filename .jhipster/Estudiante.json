@@ -25,7 +25,7 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Estudiante",
   "pagination": "pagination",
   "readOnly": false,
@@ -41,6 +41,7 @@
       "relationshipType": "many-to-one"
     },
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "curso",
       "otherEntityRelationshipName": "estudiantes",
       "ownerSide": true,
@@ -60,6 +61,7 @@
       "relationshipType": "many-to-one"
     },
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "padre",
       "otherEntityRelationshipName": "estudiantes",
       "ownerSide": false,
@@ -67,5 +69,5 @@
       "relationshipType": "many-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

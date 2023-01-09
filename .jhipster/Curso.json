@@ -15,11 +15,6 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "price",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["required"]
-    },
-    {
       "fieldName": "fechaInicio",
       "fieldType": "LocalDate"
     },
@@ -33,7 +28,7 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Curso",
   "pagination": "pagination",
   "readOnly": false,
@@ -50,13 +45,15 @@
       "relationshipType": "many-to-one"
     },
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "tutor",
       "otherEntityRelationshipName": "cursos",
       "ownerSide": false,
-      "relationshipName": "tutors",
+      "relationshipName": "tutores",
       "relationshipType": "many-to-many"
     },
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "estudiante",
       "otherEntityRelationshipName": "cursos",
       "ownerSide": false,
@@ -64,5 +61,5 @@
       "relationshipType": "many-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

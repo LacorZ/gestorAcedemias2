@@ -2,7 +2,6 @@ package com.rts.gestor.academia.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,10 +34,6 @@ public class Curso implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @NotNull
-    @Column(name = "price", precision = 21, scale = 2, nullable = false)
-    private BigDecimal price;
-
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
@@ -59,7 +54,7 @@ public class Curso implements Serializable {
     @ManyToMany(mappedBy = "cursos")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "cursos" }, allowSetters = true)
-    private Set<Tutor> tutors = new HashSet<>();
+    private Set<Tutor> tutores = new HashSet<>();
 
     @ManyToMany(mappedBy = "cursos")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -105,19 +100,6 @@ public class Curso implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public BigDecimal getPrice() {
-        return this.price;
-    }
-
-    public Curso price(BigDecimal price) {
-        this.setPrice(price);
-        return this;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public LocalDate getFechaInicio() {
@@ -185,33 +167,33 @@ public class Curso implements Serializable {
         return this;
     }
 
-    public Set<Tutor> getTutors() {
-        return this.tutors;
+    public Set<Tutor> getTutores() {
+        return this.tutores;
     }
 
-    public void setTutors(Set<Tutor> tutors) {
-        if (this.tutors != null) {
-            this.tutors.forEach(i -> i.removeCursos(this));
+    public void setTutores(Set<Tutor> tutors) {
+        if (this.tutores != null) {
+            this.tutores.forEach(i -> i.removeCursos(this));
         }
         if (tutors != null) {
             tutors.forEach(i -> i.addCursos(this));
         }
-        this.tutors = tutors;
+        this.tutores = tutors;
     }
 
-    public Curso tutors(Set<Tutor> tutors) {
-        this.setTutors(tutors);
+    public Curso tutores(Set<Tutor> tutors) {
+        this.setTutores(tutors);
         return this;
     }
 
-    public Curso addTutors(Tutor tutor) {
-        this.tutors.add(tutor);
+    public Curso addTutores(Tutor tutor) {
+        this.tutores.add(tutor);
         tutor.getCursos().add(this);
         return this;
     }
 
-    public Curso removeTutors(Tutor tutor) {
-        this.tutors.remove(tutor);
+    public Curso removeTutores(Tutor tutor) {
+        this.tutores.remove(tutor);
         tutor.getCursos().remove(this);
         return this;
     }
@@ -273,7 +255,6 @@ public class Curso implements Serializable {
             "id=" + getId() +
             ", nombre='" + getNombre() + "'" +
             ", descripcion='" + getDescripcion() + "'" +
-            ", price=" + getPrice() +
             ", fechaInicio='" + getFechaInicio() + "'" +
             ", fechaFin='" + getFechaFin() + "'" +
             ", observaciones='" + getObservaciones() + "'" +

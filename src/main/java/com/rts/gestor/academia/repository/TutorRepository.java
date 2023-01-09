@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  * For more information refer to https://github.com/jhipster/generator-jhipster/issues/17990.
  */
 @Repository
-public interface TutorRepository extends TutorRepositoryWithBagRelationships, JpaRepository<Tutor, Long> {
+public interface TutorRepository extends TutorRepositoryWithBagRelationships, JpaRepository<Tutor, Long>, JpaSpecificationExecutor<Tutor> {
     default Optional<Tutor> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findById(id));
     }

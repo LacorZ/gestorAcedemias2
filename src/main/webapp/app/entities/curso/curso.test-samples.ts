@@ -5,30 +5,25 @@ import { ICurso, NewCurso } from './curso.model';
 export const sampleWithRequiredData: ICurso = {
   id: 11617,
   nombre: 'Metal FTP extend',
-  price: 47055,
 };
 
 export const sampleWithPartialData: ICurso = {
-  id: 21123,
-  nombre: 'mano',
-  price: 74462,
-  fechaFin: dayjs('2022-12-12'),
-  observaciones: 'productividad',
+  id: 51737,
+  nombre: 'asíncrona',
+  observaciones: 'input productividad Eritrea',
 };
 
 export const sampleWithFullData: ICurso = {
-  id: 54708,
-  nombre: 'Avon',
-  descripcion: 'Granito Librería',
-  price: 22257,
-  fechaInicio: dayjs('2022-12-12'),
+  id: 6826,
+  nombre: 'deposit',
+  descripcion: 'Librería Equilibrado',
+  fechaInicio: dayjs('2022-12-11'),
   fechaFin: dayjs('2022-12-12'),
-  observaciones: 'sistema funcionalidad Cine',
+  observaciones: 'Bedfordshire web-readiness capacitor',
 };
 
 export const sampleWithNewData: NewCurso = {
-  nombre: 'Metal Hormigon parsing',
-  price: 75141,
+  nombre: 'Taka Hormigon',
   id: null,
 };
 

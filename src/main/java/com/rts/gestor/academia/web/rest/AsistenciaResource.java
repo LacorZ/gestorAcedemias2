@@ -2,6 +2,9 @@ package com.rts.gestor.academia.web.rest;
 
 import com.rts.gestor.academia.domain.Asistencia;
 import com.rts.gestor.academia.repository.AsistenciaRepository;
+import com.rts.gestor.academia.service.AsistenciaQueryService;
+import com.rts.gestor.academia.service.AsistenciaService;
+import com.rts.gestor.academia.service.criteria.AsistenciaCriteria;
 import com.rts.gestor.academia.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,7 +31,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class AsistenciaResource {
 
     private final Logger log = LoggerFactory.getLogger(AsistenciaResource.class);
@@ -40,10 +40,20 @@ public class AsistenciaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final AsistenciaService asistenciaService;
+
     private final AsistenciaRepository asistenciaRepository;
 
-    public AsistenciaResource(AsistenciaRepository asistenciaRepository) {
+    private final AsistenciaQueryService asistenciaQueryService;
+
+    public AsistenciaResource(
+        AsistenciaService asistenciaService,
+        AsistenciaRepository asistenciaRepository,
+        AsistenciaQueryService asistenciaQueryService
+    ) {
+        this.asistenciaService = asistenciaService;
         this.asistenciaRepository = asistenciaRepository;
+        this.asistenciaQueryService = asistenciaQueryService;
     }
 
     /**
@@ -59,7 +69,7 @@ public class AsistenciaResource {
         if (asistencia.getId() != null) {
             throw new BadRequestAlertException("A new asistencia cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Asistencia result = asistenciaRepository.save(asistencia);
+        Asistencia result = asistenciaService.save(asistencia);
         return ResponseEntity
             .created(new URI("/api/asistencias/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -93,7 +103,7 @@ public class AsistenciaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Asistencia result = asistenciaRepository.save(asistencia);
+        Asistencia result = asistenciaService.update(asistencia);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, asistencia.getId().toString()))
@@ -128,28 +138,7 @@ public class AsistenciaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Asistencia> result = asistenciaRepository
-            .findById(asistencia.getId())
-            .map(existingAsistencia -> {
-                if (asistencia.getFecha() != null) {
-                    existingAsistencia.setFecha(asistencia.getFecha());
-                }
-                if (asistencia.getEstado() != null) {
-                    existingAsistencia.setEstado(asistencia.getEstado());
-                }
-                if (asistencia.getHoraEntrada() != null) {
-                    existingAsistencia.setHoraEntrada(asistencia.getHoraEntrada());
-                }
-                if (asistencia.getHoraSalida() != null) {
-                    existingAsistencia.setHoraSalida(asistencia.getHoraSalida());
-                }
-                if (asistencia.getObservaciones() != null) {
-                    existingAsistencia.setObservaciones(asistencia.getObservaciones());
-                }
-
-                return existingAsistencia;
-            })
-            .map(asistenciaRepository::save);
+        Optional<Asistencia> result = asistenciaService.partialUpdate(asistencia);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -161,14 +150,30 @@ public class AsistenciaResource {
      * {@code GET  /asistencias} : get all the asistencias.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of asistencias in body.
      */
     @GetMapping("/asistencias")
-    public ResponseEntity<List<Asistencia>> getAllAsistencias(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Asistencias");
-        Page<Asistencia> page = asistenciaRepository.findAll(pageable);
+    public ResponseEntity<List<Asistencia>> getAllAsistencias(
+        AsistenciaCriteria criteria,
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+    ) {
+        log.debug("REST request to get Asistencias by criteria: {}", criteria);
+        Page<Asistencia> page = asistenciaQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /asistencias/count} : count all the asistencias.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/asistencias/count")
+    public ResponseEntity<Long> countAsistencias(AsistenciaCriteria criteria) {
+        log.debug("REST request to count Asistencias by criteria: {}", criteria);
+        return ResponseEntity.ok().body(asistenciaQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -180,7 +185,7 @@ public class AsistenciaResource {
     @GetMapping("/asistencias/{id}")
     public ResponseEntity<Asistencia> getAsistencia(@PathVariable Long id) {
         log.debug("REST request to get Asistencia : {}", id);
-        Optional<Asistencia> asistencia = asistenciaRepository.findById(id);
+        Optional<Asistencia> asistencia = asistenciaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(asistencia);
     }
 
@@ -193,7 +198,7 @@ public class AsistenciaResource {
     @DeleteMapping("/asistencias/{id}")
     public ResponseEntity<Void> deleteAsistencia(@PathVariable Long id) {
         log.debug("REST request to delete Asistencia : {}", id);
-        asistenciaRepository.deleteById(id);
+        asistenciaService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

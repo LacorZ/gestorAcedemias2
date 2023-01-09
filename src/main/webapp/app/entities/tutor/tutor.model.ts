@@ -6,7 +6,7 @@ export interface ITutor {
   email?: string | null;
   telefono?: string | null;
   observaciones?: string | null;
-  cursos?: Pick<ICurso, 'id'>[] | null;
+  cursos?: Pick<ICurso, 'id' | 'nombre'>[] | null;
 }
 
 export type NewTutor = Omit<ITutor, 'id'> & { id: null };

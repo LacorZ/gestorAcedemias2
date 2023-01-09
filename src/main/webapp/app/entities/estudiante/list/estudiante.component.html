@@ -24,6 +24,8 @@
 
   <jhi-alert></jhi-alert>
 
+  <jhi-filter [filters]="filters"></jhi-filter>
+
   <div class="alert alert-warning" id="no-result" *ngIf="estudiantes?.length === 0">
     <span jhiTranslate="gestorAcedemias2App.estudiante.home.notFound">Ningún Estudiantes encontrado</span>
   </div>

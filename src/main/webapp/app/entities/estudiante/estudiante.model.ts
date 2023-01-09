@@ -11,10 +11,10 @@ export interface IEstudiante {
   observaciones?: string | null;
   asistencias?: Pick<IAsistencia, 'id'> | null;
   facturas?: Pick<IFactura, 'id'> | null;
-  cursos?: Pick<ICurso, 'id'>[] | null;
+  cursos?: Pick<ICurso, 'id' | 'nombre'>[] | null;
   asistencia?: Pick<IAsistencia, 'id'> | null;
   factura?: Pick<IFactura, 'id'> | null;
-  padres?: Pick<IPadre, 'id'>[] | null;
+  padres?: Pick<IPadre, 'id' | 'nombre'>[] | null;
 }
 
 export type NewEstudiante = Omit<IEstudiante, 'id'> & { id: null };

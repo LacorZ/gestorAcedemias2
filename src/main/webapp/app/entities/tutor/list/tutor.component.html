@@ -24,6 +24,8 @@
 
   <jhi-alert></jhi-alert>
 
+  <jhi-filter [filters]="filters"></jhi-filter>
+
   <div class="alert alert-warning" id="no-result" *ngIf="tutors?.length === 0">
     <span jhiTranslate="gestorAcedemias2App.tutor.home.notFound">Ningún Tutors encontrado</span>
   </div>

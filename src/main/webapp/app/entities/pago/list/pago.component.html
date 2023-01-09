@@ -24,6 +24,8 @@
 
   <jhi-alert></jhi-alert>
 
+  <jhi-filter [filters]="filters"></jhi-filter>
+
   <div class="alert alert-warning" id="no-result" *ngIf="pagos?.length === 0">
     <span jhiTranslate="gestorAcedemias2App.pago.home.notFound">Ningún Pagos encontrado</span>
   </div>
@@ -76,6 +78,21 @@
           <td>{{ pago.observaciones }}</td>
           <td class="text-end">
             <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/factura']"
+                [queryParams]="{ 'filter[pagoId.in]': pago.id }"
+                class="btn btn-info btn-sm"
+                data-cy="filterOtherEntityButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span
+                  class="d-none d-md-inline"
+                  jhiTranslate="entity.action.show"
+                  [translateValues]="{ otherEntity: ('gestorAcedemias2App.pago.factura' | translate) }"
+                  >Show Factura</span
+                >
+              </button>
               <button type="submit" [routerLink]="['/pago', pago.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                 <fa-icon icon="eye"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>

@@ -2,6 +2,9 @@ package com.rts.gestor.academia.web.rest;
 
 import com.rts.gestor.academia.domain.Pago;
 import com.rts.gestor.academia.repository.PagoRepository;
+import com.rts.gestor.academia.service.PagoQueryService;
+import com.rts.gestor.academia.service.PagoService;
+import com.rts.gestor.academia.service.criteria.PagoCriteria;
 import com.rts.gestor.academia.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,9 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -30,7 +31,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class PagoResource {
 
     private final Logger log = LoggerFactory.getLogger(PagoResource.class);
@@ -40,10 +40,16 @@ public class PagoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final PagoService pagoService;
+
     private final PagoRepository pagoRepository;
 
-    public PagoResource(PagoRepository pagoRepository) {
+    private final PagoQueryService pagoQueryService;
+
+    public PagoResource(PagoService pagoService, PagoRepository pagoRepository, PagoQueryService pagoQueryService) {
+        this.pagoService = pagoService;
         this.pagoRepository = pagoRepository;
+        this.pagoQueryService = pagoQueryService;
     }
 
     /**
@@ -59,7 +65,7 @@ public class PagoResource {
         if (pago.getId() != null) {
             throw new BadRequestAlertException("A new pago cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Pago result = pagoRepository.save(pago);
+        Pago result = pagoService.save(pago);
         return ResponseEntity
             .created(new URI("/api/pagos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -91,7 +97,7 @@ public class PagoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Pago result = pagoRepository.save(pago);
+        Pago result = pagoService.update(pago);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, pago.getId().toString()))
@@ -126,25 +132,7 @@ public class PagoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Pago> result = pagoRepository
-            .findById(pago.getId())
-            .map(existingPago -> {
-                if (pago.getCantidad() != null) {
-                    existingPago.setCantidad(pago.getCantidad());
-                }
-                if (pago.getFechaPago() != null) {
-                    existingPago.setFechaPago(pago.getFechaPago());
-                }
-                if (pago.getMetodoPago() != null) {
-                    existingPago.setMetodoPago(pago.getMetodoPago());
-                }
-                if (pago.getObservaciones() != null) {
-                    existingPago.setObservaciones(pago.getObservaciones());
-                }
-
-                return existingPago;
-            })
-            .map(pagoRepository::save);
+        Optional<Pago> result = pagoService.partialUpdate(pago);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -156,14 +144,27 @@ public class PagoResource {
      * {@code GET  /pagos} : get all the pagos.
      *
      * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of pagos in body.
      */
     @GetMapping("/pagos")
-    public ResponseEntity<List<Pago>> getAllPagos(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Pagos");
-        Page<Pago> page = pagoRepository.findAll(pageable);
+    public ResponseEntity<List<Pago>> getAllPagos(PagoCriteria criteria, @org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        log.debug("REST request to get Pagos by criteria: {}", criteria);
+        Page<Pago> page = pagoQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /pagos/count} : count all the pagos.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/pagos/count")
+    public ResponseEntity<Long> countPagos(PagoCriteria criteria) {
+        log.debug("REST request to count Pagos by criteria: {}", criteria);
+        return ResponseEntity.ok().body(pagoQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -175,7 +176,7 @@ public class PagoResource {
     @GetMapping("/pagos/{id}")
     public ResponseEntity<Pago> getPago(@PathVariable Long id) {
         log.debug("REST request to get Pago : {}", id);
-        Optional<Pago> pago = pagoRepository.findById(id);
+        Optional<Pago> pago = pagoService.findOne(id);
         return ResponseUtil.wrapOrNotFound(pago);
     }
 
@@ -188,7 +189,7 @@ public class PagoResource {
     @DeleteMapping("/pagos/{id}")
     public ResponseEntity<Void> deletePago(@PathVariable Long id) {
         log.debug("REST request to delete Pago : {}", id);
-        pagoRepository.deleteById(id);
+        pagoService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

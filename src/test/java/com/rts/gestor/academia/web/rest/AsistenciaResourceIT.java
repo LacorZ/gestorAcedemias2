@@ -7,8 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.rts.gestor.academia.IntegrationTest;
 import com.rts.gestor.academia.domain.Asistencia;
+import com.rts.gestor.academia.domain.Curso;
+import com.rts.gestor.academia.domain.Estudiante;
 import com.rts.gestor.academia.domain.enumeration.AsistenciaEstado;
 import com.rts.gestor.academia.repository.AsistenciaRepository;
+import com.rts.gestor.academia.service.criteria.AsistenciaCriteria;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,6 +39,7 @@ class AsistenciaResourceIT {
 
     private static final LocalDate DEFAULT_FECHA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FECHA = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate SMALLER_FECHA = LocalDate.ofEpochDay(-1L);
 
     private static final AsistenciaEstado DEFAULT_ESTADO = AsistenciaEstado.PRESENTE;
     private static final AsistenciaEstado UPDATED_ESTADO = AsistenciaEstado.AUSENTE;
@@ -211,6 +215,385 @@ class AsistenciaResourceIT {
             .andExpect(jsonPath("$.horaEntrada").value(DEFAULT_HORA_ENTRADA.toString()))
             .andExpect(jsonPath("$.horaSalida").value(DEFAULT_HORA_SALIDA.toString()))
             .andExpect(jsonPath("$.observaciones").value(DEFAULT_OBSERVACIONES));
+    }
+
+    @Test
+    @Transactional
+    void getAsistenciasByIdFiltering() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        Long id = asistencia.getId();
+
+        defaultAsistenciaShouldBeFound("id.equals=" + id);
+        defaultAsistenciaShouldNotBeFound("id.notEquals=" + id);
+
+        defaultAsistenciaShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultAsistenciaShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultAsistenciaShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultAsistenciaShouldNotBeFound("id.lessThan=" + id);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha equals to DEFAULT_FECHA
+        defaultAsistenciaShouldBeFound("fecha.equals=" + DEFAULT_FECHA);
+
+        // Get all the asistenciaList where fecha equals to UPDATED_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.equals=" + UPDATED_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsInShouldWork() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha in DEFAULT_FECHA or UPDATED_FECHA
+        defaultAsistenciaShouldBeFound("fecha.in=" + DEFAULT_FECHA + "," + UPDATED_FECHA);
+
+        // Get all the asistenciaList where fecha equals to UPDATED_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.in=" + UPDATED_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha is not null
+        defaultAsistenciaShouldBeFound("fecha.specified=true");
+
+        // Get all the asistenciaList where fecha is null
+        defaultAsistenciaShouldNotBeFound("fecha.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha is greater than or equal to DEFAULT_FECHA
+        defaultAsistenciaShouldBeFound("fecha.greaterThanOrEqual=" + DEFAULT_FECHA);
+
+        // Get all the asistenciaList where fecha is greater than or equal to UPDATED_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.greaterThanOrEqual=" + UPDATED_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsLessThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha is less than or equal to DEFAULT_FECHA
+        defaultAsistenciaShouldBeFound("fecha.lessThanOrEqual=" + DEFAULT_FECHA);
+
+        // Get all the asistenciaList where fecha is less than or equal to SMALLER_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.lessThanOrEqual=" + SMALLER_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha is less than DEFAULT_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.lessThan=" + DEFAULT_FECHA);
+
+        // Get all the asistenciaList where fecha is less than UPDATED_FECHA
+        defaultAsistenciaShouldBeFound("fecha.lessThan=" + UPDATED_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByFechaIsGreaterThanSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where fecha is greater than DEFAULT_FECHA
+        defaultAsistenciaShouldNotBeFound("fecha.greaterThan=" + DEFAULT_FECHA);
+
+        // Get all the asistenciaList where fecha is greater than SMALLER_FECHA
+        defaultAsistenciaShouldBeFound("fecha.greaterThan=" + SMALLER_FECHA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByEstadoIsEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where estado equals to DEFAULT_ESTADO
+        defaultAsistenciaShouldBeFound("estado.equals=" + DEFAULT_ESTADO);
+
+        // Get all the asistenciaList where estado equals to UPDATED_ESTADO
+        defaultAsistenciaShouldNotBeFound("estado.equals=" + UPDATED_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByEstadoIsInShouldWork() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where estado in DEFAULT_ESTADO or UPDATED_ESTADO
+        defaultAsistenciaShouldBeFound("estado.in=" + DEFAULT_ESTADO + "," + UPDATED_ESTADO);
+
+        // Get all the asistenciaList where estado equals to UPDATED_ESTADO
+        defaultAsistenciaShouldNotBeFound("estado.in=" + UPDATED_ESTADO);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByEstadoIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where estado is not null
+        defaultAsistenciaShouldBeFound("estado.specified=true");
+
+        // Get all the asistenciaList where estado is null
+        defaultAsistenciaShouldNotBeFound("estado.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraEntradaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaEntrada equals to DEFAULT_HORA_ENTRADA
+        defaultAsistenciaShouldBeFound("horaEntrada.equals=" + DEFAULT_HORA_ENTRADA);
+
+        // Get all the asistenciaList where horaEntrada equals to UPDATED_HORA_ENTRADA
+        defaultAsistenciaShouldNotBeFound("horaEntrada.equals=" + UPDATED_HORA_ENTRADA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraEntradaIsInShouldWork() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaEntrada in DEFAULT_HORA_ENTRADA or UPDATED_HORA_ENTRADA
+        defaultAsistenciaShouldBeFound("horaEntrada.in=" + DEFAULT_HORA_ENTRADA + "," + UPDATED_HORA_ENTRADA);
+
+        // Get all the asistenciaList where horaEntrada equals to UPDATED_HORA_ENTRADA
+        defaultAsistenciaShouldNotBeFound("horaEntrada.in=" + UPDATED_HORA_ENTRADA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraEntradaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaEntrada is not null
+        defaultAsistenciaShouldBeFound("horaEntrada.specified=true");
+
+        // Get all the asistenciaList where horaEntrada is null
+        defaultAsistenciaShouldNotBeFound("horaEntrada.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraSalidaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaSalida equals to DEFAULT_HORA_SALIDA
+        defaultAsistenciaShouldBeFound("horaSalida.equals=" + DEFAULT_HORA_SALIDA);
+
+        // Get all the asistenciaList where horaSalida equals to UPDATED_HORA_SALIDA
+        defaultAsistenciaShouldNotBeFound("horaSalida.equals=" + UPDATED_HORA_SALIDA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraSalidaIsInShouldWork() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaSalida in DEFAULT_HORA_SALIDA or UPDATED_HORA_SALIDA
+        defaultAsistenciaShouldBeFound("horaSalida.in=" + DEFAULT_HORA_SALIDA + "," + UPDATED_HORA_SALIDA);
+
+        // Get all the asistenciaList where horaSalida equals to UPDATED_HORA_SALIDA
+        defaultAsistenciaShouldNotBeFound("horaSalida.in=" + UPDATED_HORA_SALIDA);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByHoraSalidaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where horaSalida is not null
+        defaultAsistenciaShouldBeFound("horaSalida.specified=true");
+
+        // Get all the asistenciaList where horaSalida is null
+        defaultAsistenciaShouldNotBeFound("horaSalida.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByObservacionesIsEqualToSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where observaciones equals to DEFAULT_OBSERVACIONES
+        defaultAsistenciaShouldBeFound("observaciones.equals=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the asistenciaList where observaciones equals to UPDATED_OBSERVACIONES
+        defaultAsistenciaShouldNotBeFound("observaciones.equals=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByObservacionesIsInShouldWork() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where observaciones in DEFAULT_OBSERVACIONES or UPDATED_OBSERVACIONES
+        defaultAsistenciaShouldBeFound("observaciones.in=" + DEFAULT_OBSERVACIONES + "," + UPDATED_OBSERVACIONES);
+
+        // Get all the asistenciaList where observaciones equals to UPDATED_OBSERVACIONES
+        defaultAsistenciaShouldNotBeFound("observaciones.in=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByObservacionesIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where observaciones is not null
+        defaultAsistenciaShouldBeFound("observaciones.specified=true");
+
+        // Get all the asistenciaList where observaciones is null
+        defaultAsistenciaShouldNotBeFound("observaciones.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByObservacionesContainsSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where observaciones contains DEFAULT_OBSERVACIONES
+        defaultAsistenciaShouldBeFound("observaciones.contains=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the asistenciaList where observaciones contains UPDATED_OBSERVACIONES
+        defaultAsistenciaShouldNotBeFound("observaciones.contains=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByObservacionesNotContainsSomething() throws Exception {
+        // Initialize the database
+        asistenciaRepository.saveAndFlush(asistencia);
+
+        // Get all the asistenciaList where observaciones does not contain DEFAULT_OBSERVACIONES
+        defaultAsistenciaShouldNotBeFound("observaciones.doesNotContain=" + DEFAULT_OBSERVACIONES);
+
+        // Get all the asistenciaList where observaciones does not contain UPDATED_OBSERVACIONES
+        defaultAsistenciaShouldBeFound("observaciones.doesNotContain=" + UPDATED_OBSERVACIONES);
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByEstudianteIsEqualToSomething() throws Exception {
+        Estudiante estudiante;
+        if (TestUtil.findAll(em, Estudiante.class).isEmpty()) {
+            asistenciaRepository.saveAndFlush(asistencia);
+            estudiante = EstudianteResourceIT.createEntity(em);
+        } else {
+            estudiante = TestUtil.findAll(em, Estudiante.class).get(0);
+        }
+        em.persist(estudiante);
+        em.flush();
+        asistencia.addEstudiante(estudiante);
+        asistenciaRepository.saveAndFlush(asistencia);
+        Long estudianteId = estudiante.getId();
+
+        // Get all the asistenciaList where estudiante equals to estudianteId
+        defaultAsistenciaShouldBeFound("estudianteId.equals=" + estudianteId);
+
+        // Get all the asistenciaList where estudiante equals to (estudianteId + 1)
+        defaultAsistenciaShouldNotBeFound("estudianteId.equals=" + (estudianteId + 1));
+    }
+
+    @Test
+    @Transactional
+    void getAllAsistenciasByCursoIsEqualToSomething() throws Exception {
+        Curso curso;
+        if (TestUtil.findAll(em, Curso.class).isEmpty()) {
+            asistenciaRepository.saveAndFlush(asistencia);
+            curso = CursoResourceIT.createEntity(em);
+        } else {
+            curso = TestUtil.findAll(em, Curso.class).get(0);
+        }
+        em.persist(curso);
+        em.flush();
+        asistencia.addCurso(curso);
+        asistenciaRepository.saveAndFlush(asistencia);
+        Long cursoId = curso.getId();
+
+        // Get all the asistenciaList where curso equals to cursoId
+        defaultAsistenciaShouldBeFound("cursoId.equals=" + cursoId);
+
+        // Get all the asistenciaList where curso equals to (cursoId + 1)
+        defaultAsistenciaShouldNotBeFound("cursoId.equals=" + (cursoId + 1));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultAsistenciaShouldBeFound(String filter) throws Exception {
+        restAsistenciaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(asistencia.getId().intValue())))
+            .andExpect(jsonPath("$.[*].fecha").value(hasItem(DEFAULT_FECHA.toString())))
+            .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())))
+            .andExpect(jsonPath("$.[*].horaEntrada").value(hasItem(DEFAULT_HORA_ENTRADA.toString())))
+            .andExpect(jsonPath("$.[*].horaSalida").value(hasItem(DEFAULT_HORA_SALIDA.toString())))
+            .andExpect(jsonPath("$.[*].observaciones").value(hasItem(DEFAULT_OBSERVACIONES)));
+
+        // Check, that the count call also returns 1
+        restAsistenciaMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultAsistenciaShouldNotBeFound(String filter) throws Exception {
+        restAsistenciaMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restAsistenciaMockMvc
+            .perform(get(ENTITY_API_URL + "/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(content().string("0"));
     }
 
     @Test

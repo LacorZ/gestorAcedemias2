@@ -6,7 +6,7 @@ export interface IPadre {
   email?: string | null;
   telefono?: string | null;
   observaciones?: string | null;
-  estudiantes?: Pick<IEstudiante, 'id'>[] | null;
+  estudiantes?: Pick<IEstudiante, 'id' | 'nombre'>[] | null;
 }
 
 export type NewPadre = Omit<IPadre, 'id'> & { id: null };

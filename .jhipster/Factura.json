@@ -21,12 +21,13 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Factura",
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "estudiante",
       "otherEntityRelationshipName": "factura",
       "relationshipName": "estudiante",
@@ -44,5 +45,5 @@
       "relationshipType": "many-to-one"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

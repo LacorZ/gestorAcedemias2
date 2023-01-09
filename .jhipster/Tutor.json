@@ -25,18 +25,19 @@
     }
   ],
   "fluentMethods": true,
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "name": "Tutor",
   "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "nombre",
       "otherEntityName": "curso",
-      "otherEntityRelationshipName": "tutors",
+      "otherEntityRelationshipName": "tutores",
       "ownerSide": true,
       "relationshipName": "cursos",
       "relationshipType": "many-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceClass"
 }

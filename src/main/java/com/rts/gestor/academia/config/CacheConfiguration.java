@@ -65,6 +65,7 @@ public class CacheConfiguration {
             createCache(cm, com.rts.gestor.academia.domain.Factura.class.getName() + ".estudiantes");
             createCache(cm, com.rts.gestor.academia.domain.Pago.class.getName());
             createCache(cm, com.rts.gestor.academia.domain.Pago.class.getName() + ".facturas");
+            createCache(cm, com.rts.gestor.academia.domain.Curso.class.getName() + ".tutores");
             // jhipster-needle-ehcache-add-entry
         };
     }

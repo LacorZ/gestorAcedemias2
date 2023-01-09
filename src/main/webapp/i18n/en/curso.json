@@ -20,13 +20,12 @@
       "id": "ID",
       "nombre": "Nombre",
       "descripcion": "Descripcion",
-      "price": "Price",
       "fechaInicio": "Fecha Inicio",
       "fechaFin": "Fecha Fin",
       "observaciones": "Observaciones",
       "asistencias": "Asistencias",
       "asistencia": "Asistencia",
-      "tutors": "Tutors",
+      "tutores": "Tutores",
       "estudiantes": "Estudiantes"
     }
   }
